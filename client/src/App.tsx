@@ -63,7 +63,7 @@ function App() {
             <strong>Balance:</strong> {balance} ETH
           </p> */}
         </div>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {/* {error && <p style={{ color: "red" }}>{error}</p>} */}
     </div>
   );
 }
