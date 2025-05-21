@@ -2,13 +2,12 @@
 import { ethers } from "ethers";
 import {toast} from "react-hot-toast";
 
-export const connectWallet = async () => {
+export const connectWallet = async (): Promise<any> => {
   const windowProvider: any = window.ethereum;
 
   if (!windowProvider) toast.error("MetaMask not installed");
 
   await windowProvider.request({ method: "eth_requestAccounts" });
-  toast.success("Connected to MetaMask");
   
   const provider = new ethers.BrowserProvider(windowProvider);
   return provider;
