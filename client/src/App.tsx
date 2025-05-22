@@ -10,8 +10,7 @@ import type { Transaction } from "./utils/types/Transaction.types";
 import Transactions from "./components/transactions/Transactions";
 import { columns } from "./components/transactions/TransactionGrid";
 import Balance from "./components/Balance";
-
-
+import { getUserEthData } from "./utils/api/Ethereum";
 
 function App() {
   const [address, setAddress] = useState<string>("");
@@ -19,10 +18,20 @@ function App() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [connected, setConnected] = useState<boolean>(false);
+  const [userETH, setUserETH] = useState<string[] | null >(null);
+  
+
 
   const handleLoading = () => {
     setLoading(!loading);
   };
+
+  const fetchUserEth = async () => {
+    const userETHData = await getUserEthData();
+    const eth = userETHData.data;
+    setUserETH(eth);
+    
+  }
 
   const handleConnect = async () => {
     try {
@@ -32,10 +41,9 @@ function App() {
       const address = await getAccounts(wallet);
       const balance = await getBalance(wallet, address);
       const transactionsRaw = await getTransactions();
-      // console.log(transactionsRaw);
 
       /* If transactionsRaw is string[], map to Transaction[] */
-      const transactions: Transaction[] = transactionsRaw.map((tx: any) => tx);
+      const transactions = transactionsRaw.map((tx: any) => tx);
 
       setLoading(false);
       setAddress(address);
@@ -85,7 +93,7 @@ function App() {
                 height={"250px"}
               />
             </Box>
-            {connected && (
+            {address && (
               <h3 style={{ color: "grey" }}>
                 <strong>{address}</strong>
               </h3>
@@ -111,24 +119,46 @@ function App() {
                   address && balance ? { color: "green" } : { color: "grey" }
                 }
               >
-                {connected && !loading ? "Connected"  : (!connected && loading ? "Connecting" : "Not Connected") }
+                {connected && !loading
+                  ? "Connected"
+                  : !connected && loading
+                  ? "Connecting"
+                  : "Not Connected"}
+                &nbsp;
                 {loading && <CircularProgress size={15} color="inherit" />}
               </h3>
-              <Button
-                variant="contained"
-                color="primary"
-                size="small"
-                onClick={handleConnect}
-                {...(connected && { disabled: true })}
-              >
-                Connect Metamask &nbsp;
-                <img
-                  src="https://cdn.iconscout.com/icon/free/png-512/metamask-2728406-2261817.png"
-                  alt=""
-                  width={"20px"}
-                  height={"20px"}
-                />
-              </Button>
+              <Box style={{ display: "flex", gap: "10px" }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  onClick={handleConnect}
+                  {...(connected && { disabled: true })}
+                >
+                  Connect Metamask &nbsp;
+                  <img
+                    src="https://cdn.iconscout.com/icon/free/png-512/metamask-2728406-2261817.png"
+                    alt=""
+                    width={"20px"}
+                    height={"20px"}
+                  />
+                </Button>
+                {connected && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    // onClick={() => {
+                    //   setAddress("");
+                    //   setBalance("");
+                    //   setTransactions([]);
+                    // }}
+                    onClick={fetchUserEth}
+                  >
+                    ETH Data
+                  </Button>
+                )}
+              </Box>
             </Box>
             <Box
               sx={{
@@ -137,13 +167,11 @@ function App() {
                 fontFamily: "monospace",
               }}
             >
-              {balance && (
-                <Balance balance={balance} />
-              )}
+              {balance && <Balance balance={balance} />}
             </Box>
           </Item>
         </Grid>
-        {connected && (
+      {transactions && connected && (
           <Grid>
             <Item
               style={{
@@ -157,7 +185,7 @@ function App() {
                 width: "30vw",
               }}
             >
-              <Transactions transactions={transactions} columns={columns} />
+              <Transactions transactions={transactions} columns={columns} userETH={userETH}/>
             </Item>
           </Grid>
         )}
