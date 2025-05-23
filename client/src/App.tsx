@@ -11,36 +11,53 @@ import Transactions from "./components/transactions/Transactions";
 import { columns } from "./components/transactions/TransactionGrid";
 import Balance from "./components/Balance";
 import { getUserEthData } from "./utils/api/Ethereum";
+import Address from "./components/eth/Address";
+import ETHBalance from "./components/eth/ETHBalance";
+import BlockNumber from "./components/eth/BlockNumber";
+import GasPrice from "./components/eth/GasPrice";
 
 function App() {
   const [address, setAddress] = useState<string>("");
   const [balance, setBalance] = useState<string>("");
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [connected, setConnected] = useState<boolean>(false);
-  const [userETH, setUserETH] = useState<string[] | null >(null);
-  
 
+  const [fetchETHData, setFetchETHData] = useState<boolean>(false);
+  const [ethAddress, setEthAddress] = useState<string>("");
+  const [ethGasPrice, setEthGasPrice] = useState<string>("");
+  const [ethBalance, setEthBalance] = useState<string>("");
+  const [ethBlockNumber, setEthBlockNumber] = useState<number | null>(null);
 
   const handleLoading = () => {
-    setLoading(!loading);
+    setLoading(true);
   };
 
   const fetchUserEth = async () => {
+    setTransactions(null);
+    setAddress("");
+    setBalance("");
     const userETHData = await getUserEthData();
     const eth = userETHData.data;
-    setUserETH(eth);
-    
-  }
+
+    setEthAddress(eth.address);
+    setEthGasPrice(eth.gasPrice);
+    setEthBalance(eth.balance);
+    setEthBlockNumber(eth.blockNumber);
+
+    setFetchETHData(true);
+
+    console.log(eth);
+  };
 
   const handleConnect = async () => {
-    try {
-      handleLoading();
-      const wallet = await connectWallet();
+    try { 
+      handleLoading(); /* Create a loading state when connecting to MetaMask */
+      const wallet = await connectWallet(); /* Connect to MetaMask */
 
-      const address = await getAccounts(wallet);
-      const balance = await getBalance(wallet, address);
-      const transactionsRaw = await getTransactions();
+      const address = await getAccounts(wallet); /* Get the connected account address */
+      const balance = await getBalance(wallet, address); /* Get the balance of the connected account */
+      const transactionsRaw = await getTransactions();  /* Fetch last 10 transactions from the API */
 
       /* If transactionsRaw is string[], map to Transaction[] */
       const transactions = transactionsRaw.map((tx: any) => tx);
@@ -116,7 +133,7 @@ function App() {
             >
               <h3
                 style={
-                  address && balance ? { color: "green" } : { color: "grey" }
+                  connected ? { color: "green" } : { color: "grey" }
                 }
               >
                 {connected && !loading
@@ -135,7 +152,7 @@ function App() {
                   onClick={handleConnect}
                   {...(connected && { disabled: true })}
                 >
-                  Connect Metamask &nbsp;
+                  Connect &nbsp;
                   <img
                     src="https://cdn.iconscout.com/icon/free/png-512/metamask-2728406-2261817.png"
                     alt=""
@@ -154,6 +171,7 @@ function App() {
                     //   setTransactions([]);
                     // }}
                     onClick={fetchUserEth}
+                    // {...(fetchETHData && { disabled: true })}
                   >
                     ETH Data
                   </Button>
@@ -171,7 +189,8 @@ function App() {
             </Box>
           </Item>
         </Grid>
-      {transactions && connected && (
+        {/* {transactions && connected && ( */}
+        {connected && (
           <Grid>
             <Item
               style={{
@@ -185,7 +204,27 @@ function App() {
                 width: "30vw",
               }}
             >
-              <Transactions transactions={transactions} columns={columns} userETH={userETH}/>
+              {transactions ? (
+                <Transactions transactions={transactions} columns={columns} />
+              ) : 
+                !fetchETHData ? (<>Fetching ETH Data {<CircularProgress size={15} color="inherit" />}</>) : (
+                <Box
+                  sx={{
+                    
+                    height: "100%",
+                  }}
+                >
+                  <h1>
+                    <strong>Ethereum Data</strong>
+                  </h1>
+                  <hr  style={{ width: "100%" }}/>
+                 <Address address={ethAddress} />
+                 <ETHBalance balance={ethBalance} />
+                 <BlockNumber block={ethBlockNumber} />
+                 <GasPrice gas_price={ethGasPrice} />
+                </Box>
+              )}
+              
             </Item>
           </Grid>
         )}

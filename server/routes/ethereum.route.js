@@ -5,4 +5,4 @@ const { connectWallet } = require('../controllers/Ethereum.controller.js');
 
 userETHRouter.post('/eth/:address', connectWallet);
 
-module.exports = userETHRouter;
+module.exports = userETHRouter; 

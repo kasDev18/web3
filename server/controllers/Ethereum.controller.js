@@ -1,37 +1,37 @@
-const axios = require("axios");
-const { ethers } = require("ethers");
-const { ETHERSCAN_API_KEY, ETHERSCAN_URI, DUMMY_ADDRESS } = process.env;
+const Account = require("../models/Account.js");
 
-// const getBalance = async (address) => {
-//   const windowProvider = window.ethereum;
-//   await windowProvider.request({ method: "eth_requestAccounts" });
-
-//   const provider = new ethers.BrowserProvider(windowProvider);
-//   const balanceBigInt = await provider.getBalance(address);
-//   const balance = ethers.formatEther(balanceBigInt);
-//   return parseFloat(balance).toFixed(2).toString();
-// };
+const {
+  getGasPrice,
+  getBalance,
+  getBlockNumber,
+} = require("../services/ethServices.js");
 
 const connectWallet = async (req, res) => {
   const { address } = req.params;
+  try {
+    const [gasPrice, balance, blockNumber] = await Promise.all([
+      getGasPrice(),
+      getBalance(address),
+      getBlockNumber(),
+    ]);
 
-  const url = `${ETHERSCAN_URI}?chainid=1&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=${ETHERSCAN_API_KEY}`;
+    await Account.findOneAndUpdate(
+      { address },
+      { balance, gasPrice, blockNumber },
+      { upsert: true, new: true }
+    );
 
-  const response = await axios.get(url);
-  const data = response.data;
-
-  // const remainingBalance = await getBalance(address)
-
-  if (data.status !== "1") {
-    throw new Error("Failed to fetch transactions");
+    res.status(200).json({
+      address,
+      gasPrice,
+      balance,
+      blockNumber,
+    });
+  
+  } catch (error) {
+    console.error("Error fetching Ethereum data:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
-
-  const result = data.result;
-
-  res.status(200).json({
-    result,
-  });
-
 };
 
 module.exports = { connectWallet };
