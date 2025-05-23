@@ -19,7 +19,7 @@ export default function Data({ ...props }: IndexProps) {
         <strong>{props.title}:</strong>
       </p>
       <p style={{ marginLeft: "10px" }}>
-        <strong>{props.value}</strong>
+        <strong>{props.value} {props.suffix}</strong>
       </p>
     </Box>
   );
