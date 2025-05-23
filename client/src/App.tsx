@@ -29,30 +29,14 @@ function App() {
   const [ethBalance, setEthBalance] = useState<string>("");
   const [ethBlockNumber, setEthBlockNumber] = useState<number | null>(null);
 
+  /* Handle loading state when connecting to MetaMask */ 
   const handleLoading = () => {
     setLoading(true);
   };
 
-  const fetchUserEth = async () => {
-    setTransactions(null);
-    setAddress("");
-    setBalance("");
-    const userETHData = await getUserEthData();
-    const eth = userETHData.data;
-
-    setEthAddress(eth.address);
-    setEthGasPrice(eth.gasPrice);
-    setEthBalance(eth.balance);
-    setEthBlockNumber(eth.blockNumber);
-
-    setFetchETHData(true);
-
-    console.log(eth);
-  };
-
   const handleConnect = async () => {
     try { 
-      handleLoading(); /* Create a loading state when connecting to MetaMask */
+      handleLoading();
       const wallet = await connectWallet(); /* Connect to MetaMask */
 
       const address = await getAccounts(wallet); /* Get the connected account address */
@@ -72,6 +56,24 @@ function App() {
     } catch (err: any) {
       toast.error(err.message || "An error occurred");
     }
+  };
+
+  const fetchUserEth = async () => {
+    setTransactions(null); /* Clear transactions when fetching ETH data */
+    setAddress(""); /* Clear address when fetching ETH data */
+    setBalance(""); /* Clear balance when fetching ETH data */
+    const userETHData = await getUserEthData(); /* Fetch user ETH data from the API */
+    const eth = userETHData.data; 
+
+    /* Set ETH data */
+    setEthAddress(eth.address); 
+    setEthGasPrice(eth.gasPrice);
+    setEthBalance(eth.balance);
+    setEthBlockNumber(eth.blockNumber);
+
+    setFetchETHData(true); /* Set fetchETHData to true to show ETH data */
+
+    console.log(eth);
   };
 
   const Item = styled(Paper)(({ theme }) => ({
@@ -165,13 +167,7 @@ function App() {
                     variant="contained"
                     color="primary"
                     size="small"
-                    // onClick={() => {
-                    //   setAddress("");
-                    //   setBalance("");
-                    //   setTransactions([]);
-                    // }}
                     onClick={fetchUserEth}
-                    // {...(fetchETHData && { disabled: true })}
                   >
                     ETH Data
                   </Button>

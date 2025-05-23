@@ -1,54 +1,44 @@
-# React + TypeScript + Vite
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://th.bing.com/th/id/R.f81a6f373c244b1f70f4b7402b5ab372?rik=rbXh4ieLuKt%2bmA&riu=http%3a%2f%2flogos-download.com%2fwp-content%2fuploads%2f2016%2f09%2fReact_logo_logotype_emblem.png&ehk=QhGOkKcUKCU7FBQgHOajOiJqJBACUTD2Ni6LsfqzCEA%3d&risl=&pid=ImgRaw&r=0" width="400"></a></p>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Todo Sample React
 
-Currently, two official plugins are available:
+<p align="left">Sample web app for connecting to your metamask and list ETH data by user address using react. Completed with the ff:</p>
+<b><p>Frontend:</p></b>
+<ul>
+    <li>Container and execution button</li>
+    <li>Table of last 10 transactions</li>
+    <li>Fetched data including address, balance, gas price and block number</li>
+    <li>Error and Success alert</li>
+    <li>Fetch functionality to interact with the Etherscan API </li>
+    <li>Env file for data security</li>
+</ul>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<b><p>Backend:</p></b>
 
-## Expanding the ESLint configuration
+<ul>
+    <li>Installation of packages (express, dotenv, cors, mongoose, redis)</li>
+    <li>Database connections</li>
+    <li>Caching</li>
+    <li>Models and Controllers for Schemas.</li>
+    <li>Env file for data security</li>
+</ul>
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Installation
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+1. Clone the repository
+2. After cloning, open `bash` to the file root directory.
+3. Open the file in your code editor (vs code, sublime, etc.). Open the terminal in your editor and run `npm install`
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Run Application
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. Navigate to client and server folder individually.
+2. Open code editor terminal of each folder then run `npm run dev`
+3. Open `localhost:3000` on your browser to view.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Run Redis/Test response
+
+1. Open Terminal and type "redis-server"
+2. For testing redis, open new bash and type "redis-cli"
+3. Go to server/services/ethServices.js to get the key needed for testing (Ex. gas_price, balance and block_number)
+4. Make sure to run the app and click the "ETH Data" button first to get the response according to its key.
+
