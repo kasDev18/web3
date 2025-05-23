@@ -9,42 +9,25 @@ import type {
 type TransactionsProps = {
   transactions: Transaction[];
   columns: TransactionColumns[];
-  userETH: string[] | null;
 };
 
 export default function Transactions(props: TransactionsProps) {
   return (
     <Box fontStyle={"monospace"}>
       <h2>Transactions</h2>
-      {!props.userETH ? 
-        <DataGrid
-          getRowId={(row) => row.blockNumber}
-          rows={props.transactions}
-          columns={props.columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
-              },
+      <DataGrid
+        getRowId={(row) => row.blockNumber}
+        rows={props.transactions}
+        columns={props.columns}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 10,
             },
-          }}
-          pageSizeOptions={[10]}
-        />
-      : (
-        <DataGrid
-          getRowId={(row) => row.blockNumber}
-          rows={props.transactions}
-          columns={props.columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
-              },
-            },
-          }}
-          pageSizeOptions={[10]}
-        />
-      )}
+          },
+        }}
+        pageSizeOptions={[10]}
+      />
     </Box>
   );
 }
