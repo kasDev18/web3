@@ -3,7 +3,7 @@ const { ETHERSCAN_API_KEY, ETHERSCAN_API_URI } = process.env;
 const redisClient = require("../utils/cache.js");
 
 // Cache TTL in seconds
-const CACHE_TTL = 30; // Adjust as needed (30 seconds here)
+const CACHE_TTL = 3600; // Adjust as needed (30 seconds here)
 
 /**
  * Get from cache or fetch and set if not available
