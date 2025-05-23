@@ -39,6 +39,15 @@ function App() {
       handleLoading();
       const wallet = await connectWallet(); /* Connect to MetaMask */
 
+      if (wallet.error) {
+        setConnected(false);
+        setLoading(false);
+        toast.error("MetaMask not installed");
+        return;
+      }
+      
+      
+
       const address = await getAccounts(wallet); /* Get the connected account address */
       const balance = await getBalance(wallet, address); /* Get the balance of the connected account */
       const transactionsRaw = await getTransactions();  /* Fetch last 10 transactions from the API */
@@ -49,12 +58,12 @@ function App() {
       setLoading(false);
       setAddress(address);
       setBalance(balance);
-      setConnected(!connected);
+      setConnected(true);
       setTransactions(transactions);
 
       toast.success("Connected to MetaMask");
     } catch (err: any) {
-      toast.error(err.message || "An error occurred");
+      // toast.error(err.message || "An error occurred");
     }
   };
 
