@@ -1,13 +1,13 @@
 // src/utils/ethersUtils.ts
 import { ethers } from "ethers";
-import {toast} from "react-hot-toast";
+// import {toast} from "react-hot-toast";
 
 export const connectWallet = async (): Promise<any> => {
   const windowProvider: any = window.ethereum;
-  console.log("windowProvider", windowProvider);
+  // console.log("windowProvider", windowProvider);
   
 
-  if (!windowProvider) toast.error("MetaMask not installed");
+  if (!windowProvider) return {error: "Please install MetaMask!" };
 
   await windowProvider.request({ method: "eth_requestAccounts" });
   
