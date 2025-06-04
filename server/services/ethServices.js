@@ -18,6 +18,8 @@ async function getOrSetCache(key, fetchFunction) {
   /* Get from cache */
   const cachedData = await redisClient.get(key);
   if (cachedData) {
+    console.log("Cache hit", cachedData);
+    
     return JSON.parse(cachedData);
   }
 

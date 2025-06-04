@@ -42,7 +42,7 @@ function App() {
       if (wallet.error) {
         setConnected(false);
         setLoading(false);
-        toast.error("MetaMask not installed");
+        toast.error(wallet.error);
         return;
       }
       
