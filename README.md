@@ -38,6 +38,6 @@
 ## Test Redis CLI
 
 1. For testing redis, open new bash and type "redis-cli"
-2. Go to server/services/ethServices.js to get the key needed for testing (Ex. gas_price, balance_<address> and block_number)
+2. Go to server/services/ethServices.js to get the key needed for testing (Ex. gas_price, balance_(address) and block_number)
 3. Make sure to run the app and click the "ETH Data" button first to get the response according to its key.
 
